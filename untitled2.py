@@ -11,6 +11,7 @@ Created on Sat Mar 24 18:29:00 2018
 import win32gui
 import pyautogui
 
+
 pyautogui.FAILSAFE = True
 pyautogui.PAUSE = 2.5
 
@@ -30,4 +31,14 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
+   
+hwndMain = win32gui.FindWindow("MSPaintApp",None)
+print (hwndMain)    
+rect = win32gui.GetWindowRect(hwndMain)
+x = rect[0]
+y = rect[1]
+w = rect[2] - x
+h = rect[3] - y
+print ("Window %s:" % win32gui.GetWindowText(hwndMain))
+print ("\tLocation: (%d, %d)" % (x, y))
+print ("\t    Size: (%d, %d)" % (w, h))
