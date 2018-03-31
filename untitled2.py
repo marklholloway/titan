@@ -15,30 +15,43 @@ import pyautogui
 pyautogui.FAILSAFE = True
 pyautogui.PAUSE = 2.5
 
-def callback(hwnd, extra):
-    rect = win32gui.GetWindowRect(hwnd)
-    x = rect[0]
-    y = rect[1]
-    w = rect[2] - x
-    h = rect[3] - y
-    print ("Window %s:" % win32gui.GetWindowText(hwnd))
-    print ("\tLocation: (%d, %d)" % (x, y))
-    print ("\t    Size: (%d, %d)" % (w, h))
 
 
 def main():
-    win32gui.EnumWindows(callback, None)
+    
+    parser = Windowparser("MSPaintApp")    
+    parser.updateWindowDimensions()
+    parser.PrintDimensions()        
+
 
 if __name__ == '__main__':
     main()
    
-hwndMain = win32gui.FindWindow("MSPaintApp",None)
-print (hwndMain)    
-rect = win32gui.GetWindowRect(hwndMain)
-x = rect[0]
-y = rect[1]
-w = rect[2] - x
-h = rect[3] - y
-print ("Window %s:" % win32gui.GetWindowText(hwndMain))
-print ("\tLocation: (%d, %d)" % (x, y))
-print ("\t    Size: (%d, %d)" % (w, h))
+
+
+class Windowparser(object):
+    #class needs to be cleaned up to remove self calls#
+    def __init__(self,appId):
+        self.appId = appId
+        self.x = 0
+        self.y = 0
+        self.w = 0
+        self.h = 0 
+        try:
+            self.updateWindowDimensions()            
+        except  ValueError:
+            print ("Incorrect appID passed to window parser")
+                       
+    def updateWindowDimensions(self):
+        self.hwndMain = win32gui.FindWindow(self.appId,None)
+        rect = win32gui.GetWindowRect(self.hwndMain)
+        self.x = rect[0]
+        self.y = rect[1]
+        self.w = rect[2] - self.x
+        self.h = rect[3] - self.y
+
+    def PrintDimensions(self):
+            print ("Window %s:" % win32gui.GetWindowText(self.hwndMain))
+            print ("\tLocation: (%d, %d)" % (self.x, self.y))
+            print ("\t    Size: (%d, %d)" % (self.w, self.h))
+    
