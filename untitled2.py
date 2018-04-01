@@ -5,28 +5,16 @@ Created on Sat Mar 24 18:29:00 2018
 @author: Mark
 """
 
-#should use findwindow instead of getwindow
+
 
 
 import win32gui
 import pyautogui
-
+import win32com.client
 
 pyautogui.FAILSAFE = True
 pyautogui.PAUSE = 2.5
 
-
-
-def main():
-    
-    parser = Windowparser("MSPaintApp")    
-    parser.updateWindowDimensions()
-    parser.PrintDimensions()        
-
-
-if __name__ == '__main__':
-    main()
-   
 
 
 class Windowparser(object):
@@ -55,3 +43,23 @@ class Windowparser(object):
             print ("\tLocation: (%d, %d)" % (self.x, self.y))
             print ("\t    Size: (%d, %d)" % (self.w, self.h))
     
+    def BringForward(self): #this function should belong to another class#
+         shell = win32com.client.Dispatch("WScript.Shell")
+         shell.SendKeys('%')
+         win32gui.SetForegroundWindow(self.hwndMain)
+        
+
+
+def main():
+    
+    parser = Windowparser("MSPaintApp")    
+    parser.updateWindowDimensions()
+    parser.PrintDimensions()        
+    parser.BringForward()
+
+if __name__ == '__main__':
+    main()
+   
+
+
+
